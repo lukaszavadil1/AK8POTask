@@ -22,9 +22,6 @@ namespace SnakeGameTask.Core.Game
         {
             screenWidth = width;
             screenHeight = height;
-            Console.SetWindowSize(screenWidth, screenHeight);
-            Console.WindowWidth = screenWidth;
-            Console.WindowHeight = screenHeight;
 
             random = new Random();
             snake = new Snake(screenWidth / 2, screenHeight / 2);
@@ -37,6 +34,8 @@ namespace SnakeGameTask.Core.Game
 
         public void Run()
         {
+            // Main game loop
+            Console.Clear();
             while (!isGameOver)
             {
                 Draw();
@@ -52,7 +51,7 @@ namespace SnakeGameTask.Core.Game
             Console.Clear();
             DrawEdges();
             snakeService.Draw(snake);
-            berryService.Draw();
+            berryService.Draw(berry);
         }
 
         private void DrawEdges()
@@ -94,12 +93,14 @@ namespace SnakeGameTask.Core.Game
         {
             snakeService.Move(snake, direction);
 
+            // Snake eats berry
             if (snake.Head.XPos == berry.XPos && snake.Head.YPos == berry.YPos)
             {
                 snakeService.Grow(snake);
                 berry = berryService.GenerateNext(random.Next(1, screenWidth - 2), random.Next(1, screenHeight - 2));
             }
 
+            // Snake collides with wall or itself
             if (snakeService.IsWallCollision(snake, screenWidth, screenHeight) || snakeService.IsSelfCollision(snake))
             {
                 isGameOver = true;

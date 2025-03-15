@@ -8,8 +8,10 @@ namespace SnakeGameTask.Services
     {
         public void Move(Snake snake, Direction direction)
         {
+            // Add new body chunk on the position of the head
             snake.Body.Add(new SnakeBody(snake.Head.XPos, snake.Head.YPos));
 
+            // Move the head in the desired direction
             switch (direction)
             {
                 case Direction.Up:
@@ -26,6 +28,7 @@ namespace SnakeGameTask.Services
                     break;
             }
 
+            // Remove the snake's previous tail chunk if it hasn't grown
             if (snake.Body.Count > snake.Score)
             {
                 snake.Body.RemoveAt(0);
@@ -34,10 +37,7 @@ namespace SnakeGameTask.Services
 
         public void Grow(Snake snake)
         {
-            if (snake.Body.Count < snake.Score)
-            {
-                snake.Body.Add(new SnakeBody(snake.Head.XPos, snake.Head.YPos));
-            }
+            snake.Body.Add(new SnakeBody(snake.Head.XPos, snake.Head.YPos));
             snake.Score++;
         }
 
@@ -55,10 +55,10 @@ namespace SnakeGameTask.Services
 
         public bool IsWallCollision(Snake snake, int width, int height)
         {
-            return snake.Head.XPos == 0 ||
-                   snake.Head.YPos == 0 ||
-                   snake.Head.XPos == width - 1 ||
-                   snake.Head.YPos == height - 1;
+            return snake.Head.XPos == 0 || // Left wall
+                   snake.Head.YPos == 0 || // Top wall
+                   snake.Head.XPos == width - 1 || // Right wall
+                   snake.Head.YPos == height - 1; // Bottom wall
         }
 
         public void Draw(Snake snake)
